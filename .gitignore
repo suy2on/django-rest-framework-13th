@@ -351,6 +351,10 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+# db settings
+/config/secrets.json
+
+
 # Windows shortcuts
 *.lnk
 
