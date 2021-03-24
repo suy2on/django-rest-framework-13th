@@ -17,6 +17,8 @@ class Post(models.Model):
 
 class Photo(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="image")  # media/image에 이미지들 저
+    image = models.ImageField(upload_to="image")  # media/image에 이미지들 저장
 
-
+class Video(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    video = models.FileField(upload_to="video")  # media/video에 영상들 저장
