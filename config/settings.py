@@ -119,8 +119,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# auth
-AUTH_USER_MODEL = 'api.User'
 
 # media upload
 MEDIA_URL = '/media/'
