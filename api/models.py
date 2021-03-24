@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.conf import settings
 import datetime
 
 # User 와 1대1 관계
@@ -12,7 +11,7 @@ class Profile(models.Model):
 # User 와 1대다 관계
 class Post(models.Model):
     written = models.TextField()
-    author = models.ForeignKey(settings.AUTH_USER_MODEL) # 로그인된 user
+    author = models.ForeignKey(User, on_delete=models.CASCADE) # 로그인된 user
     pub_date = models.DateTimeField('date published', default=datetime.datetime.now, editable=False)
 
 class Photo(models.Model):
