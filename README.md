@@ -8,7 +8,36 @@
 
 ## 2주차 과제 (기한: 3/25 목요일까지)
 ### 모델 설명
-인스타그램에 대해 본인이 작성한 모델들에 대한 설명과 모델 간의 관계 등을 적어주세요!
+
+* User  
+email  
+password  
+username   
+  ...  
+  
+  
+* Profile  
+nickname : 닉네임   
+  comment  : 간단한 소개  
+  user_id  : 회원  
+     
+
+* Post  
+written : 글  
+  pub_date : 업로드날짜   
+  author_id : 글쓴이   
+      
+
+* Video  
+video : 동영상  
+  post_id : 소속게시물    
+    
+  
+* Photo  
+image : 사진   
+  post_id : 소속게시물 
+
+  
 
 ### ORM 적용해보기
 shell에서 작성한 코드와 그 결과를 보여주세요!
