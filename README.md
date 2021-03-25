@@ -38,6 +38,25 @@ image : 사진
   post_id : 소속게시물 
 
   
+#### media파일
+ -FileField 를 통해 저장한 모든 파일을 지칭 (ImageField도 포함)  
+-db필드에는 저장경로를 저장  
+-실제 파일은 settings.MEDIA_ROOT 경로에 저장  
+-모델작성시에 upload_to인자로 더 자세한 저장경로를 지정가
+- settings
+~~~python
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+~~~
+- models.py
+~~~python
+# media/image/ 아래에 저장
+photo = models.ImageField(upload_to="image")
+# 이미지 업로드 날짜에 따라 디렉토리에 저장 (strftime 으로 포멧팅)
+photo = models.ImageField(upload_to="%Y/%m/%d")
+~~~
+
+
 
 ### ORM 적용해보기
 * Post 모델 객체넣기 
@@ -67,14 +86,15 @@ image : 사진
 ~~~
 * relation연습  
 
-post의 author조회 
+##### post의 author조회 
 ~~~python
 >>> post1.author
 <User: user1>
 >>> post1.author.username
 >>> 'user1'
 ~~~
-user1의 post 조회하기 
+##### user1의 post 조회하기   
+( Post 안에 foreign key 가 있고 그게 User로 향하고 있어서 User은 post_set을 갖는다 )
 ~~~python
 >>> user1 = User.objects.get(id=1)
 >>> user1
