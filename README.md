@@ -19,11 +19,14 @@ username
 * Profile  
 nickname : 닉네임   
   comment  : 간단한 소개  
-  user_id  : 회원  
+  user_id  : 회원
+  phone_num : 연락처
+  website : 웹사이트
+  img : 프로필사진  
      
 
 * Post  
-written : 글  
+text : 글  
   pub_date : 업로드날짜   
   author_id : 글쓴이   
       
