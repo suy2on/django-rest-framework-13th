@@ -11,6 +11,9 @@ class Profile(models.Model):
     phone_num = models.TextField(max_length= 15)
     img = models.ImageField(upload_to="profile_img", null= True)
 
+    def __str__(self):
+        return self.nickname
+
 
 # User 와 1대다 관계
 class Post(models.Model):
