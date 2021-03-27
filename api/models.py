@@ -22,18 +22,18 @@ class Post(models.Model):
     pub_date = models.DateTimeField('date published', default=datetime.datetime.now, editable=False)
 
     def __str__(self):
-        return self.written
+        return 'post: {} by {}'.format(self.text, self.author.profile.nickname)
 
 class Photo(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="image")  # media/image에 이미지들 저장
 
     def __str__(self):
-        return self.post.written
+        return self.post.text
 
 class Video(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     video = models.FileField(upload_to="video")  # media/video에 영상들 저장
 
     def __str__(self):
-        return self.post.written
+        return self.post.text
