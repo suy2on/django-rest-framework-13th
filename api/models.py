@@ -6,10 +6,10 @@ import datetime
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nickname = models.CharField(max_length=10)
-    comment = models.TextField(max_length= 200, null= True)
-    website = models.TextField(max_length= 100, null= True)
+    comment = models.TextField(max_length= 200, null= True, blank=True)
+    website = models.TextField(max_length= 100, null= True, blank=True)
     phone_num = models.TextField(max_length= 15)
-    img = models.ImageField(upload_to="profile_img", null= True)
+    img = models.ImageField(upload_to="profile_img", null= True, blank=True)
 
     def __str__(self):
         return self.nickname
@@ -18,7 +18,7 @@ class Profile(models.Model):
 # User 와 1대다 관계
 class Post(models.Model):
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE) # 로그인된 user
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     pub_date = models.DateTimeField('date published', default=datetime.datetime.now, editable=False)
 
     def __str__(self):
