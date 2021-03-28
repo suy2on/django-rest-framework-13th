@@ -58,6 +58,11 @@ photo = models.ImageField(upload_to="image")
 # 이미지 업로드 날짜에 따라 디렉토리에 저장 (strftime 으로 포멧팅)
 photo = models.ImageField(upload_to="%Y/%m/%d")
 ~~~
+- urls.py
+~~~python
+# 이미지 url설정
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+~~~
 
 
 
