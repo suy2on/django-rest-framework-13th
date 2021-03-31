@@ -126,3 +126,57 @@ user1.post ( x ), user1.username ( x )
 처음에는 모델링이 생각보다 간단할 줄 알았지만 실제로 하면서 영상과 사진 업로드를 다루는 과정이 생각보다 복잡해서
 좀 애를 먹었습니다. 미리보기문제로 마크다운에 추가하진 못했지만 draw.io를 사용해서 모델링을 해보면서 원래는 노트에 하곤 했었는데 너무 편하고
 좋았습니다. 앞으로 insta clone을 해서 완성될 모습이 기대가 됩니다.
+
+## 3주차 과제 (기한: 10/3 토요일까지)
+
+
+### 모델 선택 및 데이터 삽입
+선택모델 : Post
+~~~python
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=10, unique=True)
+    comment = models.TextField(max_length= 200, null= True, blank=True)
+    web_site = models.TextField(max_length= 100, null= True, blank=True)
+    phone_num = models.TextField(max_length= 15)
+    img = models.ImageField(upload_to="profile_img", null= True, blank=True)
+
+    def __str__(self):
+        return self.nickname
+
+
+# User 와 1대다 관계
+class Post(models.Model):
+    text = models.TextField()
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name= 'posts')
+    pub_date = models.DateTimeField(auto_now_add = True)
+    like = models.ManyToManyField(Profile, related_name='like_posts', blank=True, null=True)
+    def __str__(self):
+        return 'post: {} by {}'.format(self.text, self.author.nickname)
+
+    def like_count(self):
+        return self.like.count()
+~~~
+데이터 조회 
+~~~python
+>>> Post.objects.all()
+<QuerySet [<Post: post: 첫 번째글 by suy2on>, <Post: post: 다시글 by 포슬포슬>, <Post: post: 무야호~ by 포슬포슬>]>
+~~~
+
+### 모든 list를 가져오는 API
+API 요청한 URL과 결과 데이터를 코드로 보여주세요!
+
+### 특정한 데이터를 가져오는 API
+API 요청한 URL과 결과 데이터를 코드로 보여주세요!
+
+### 새로운 데이터를 create하도록 요청하는 API
+요청한 URL 및 Body 데이터의 내용과 create된 결과를 보여주세요!
+
+### (선택) 특정 데이터를 삭제 또는 업데이트하는 API
+위의 필수 과제와 마찬가지로 요청 URL 및 결과 데이터를 보여주세요!
+
+### 공부한 내용 정리
+새로 알게된 점, 정리 하고 싶은 개념, 궁금한점 등을 정리해 주세요
+
+### 간단한 회고
+과제 시 어려웠던 점이나 느낀 점, 좋았던 점 등을 간단히 적어주세요!
