@@ -207,13 +207,26 @@ api/post/2 (GET)
 
 
 ### 새로운 데이터를 create하도록 요청하는 API
-요청한 URL 및 Body 데이터의 내용과 create된 결과를 보여주세요!
+api/post (POST)
+~~~python
+{
+    "id": 5,
+    "text": "post 이용해서 넣는 두번째 문장",
+    "like": [],
+    "author_nickname": "포슬포슬",
+    "author": 1
+}
+~~~
+
 
 ### (선택) 특정 데이터를 삭제 또는 업데이트하는 API
-위의 필수 과제와 마찬가지로 요청 URL 및 결과 데이터를 보여주세요!
+마감까지 해보려고합니
 
 ### 공부한 내용 정리
-새로 알게된 점, 정리 하고 싶은 개념, 궁금한점 등을 정리해 주세요
+* ####serializer에 filed 넣어야하는 것
+* ####restful api 작성요령
+* ####FK(foreignKey) filed data넘겨주기
+
 
 ### 간단한 회고
 과제 시 어려웠던 점이나 느낀 점, 좋았던 점 등을 간단히 적어주세요!
