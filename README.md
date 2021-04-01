@@ -226,14 +226,14 @@ api/post (POST)
 마감까지 해보려고합니
 
 ### 공부한 내용 정리
-* ####serializer에 field 넣어야하는 것
+* #### serializer에 field 넣어야하는 것
   - fields = __all__, exclude, 직접 명시 ('id', 'name') 과 같은 방식들로 넣을 수 있음  
   - forignkey로 연결된 field는 넣어주어야 한다 ( 아직 정확한 이유는 찾지 못했습니다 ㅠㅠ )
   - 기존에 있던 field가 아닌 걸 추가하고 싶다면 : serializer.SerializerMethodField()로 정의해준뒤  
    get_<field_name> 이름의 메소드를 만들어주면 된다  
   - serializers.StringRelatedField() 를 사용해주면 ForgeignKey로 연결된 모델의 __str__ 메소드에서 정의한 string를 리턴  
   
-* ####REST API 작성요령
+* #### REST API 작성요령
   - GET 전체조회, POST 같은 경우에는 id값을 붙여주지 않는다  
   - resource부분에 명사는 복수형으로 쓴다 (api/posts)
   - resource와 따라오는 id가 연관되게 쓴다 ( api/posts/2 -> api/users/2/posts )
@@ -241,7 +241,7 @@ api/post (POST)
   - 마지막에는 /를 추가하지 않는다
   - _를 사용하지 않는 (대신 하이픈(-)을 사용해준다)
   
-* ####FK(foreignKey) field data 넘겨주기
+* #### FK(foreignKey) field data 넘겨주기
   post의 author(작성자)를 넘겨줄 때 { 'author' : 객체 -> id }로 넘져준다  
   db에서 id값만 가져와서 저장하고 있기때문이다 (author_id)
 
