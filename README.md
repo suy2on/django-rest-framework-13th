@@ -164,10 +164,47 @@ class Post(models.Model):
 ~~~
 
 ### 모든 list를 가져오는 API
-API 요청한 URL과 결과 데이터를 코드로 보여주세요!
+api/post/ (GET)
+~~~python
+[
+    {
+        "id": 1,
+        "text": "첫 번째글",
+        "like": [
+            1
+        ],
+        "author_nickname": "suy2on"
+    },
+    {
+        "id": 2,
+        "text": "다시글",
+        "like": [],
+        "author_nickname": "포슬포슬"
+    },
+    {
+        "id": 3,
+        "text": "무야호~",
+        "like": [],
+        "author_nickname": "포슬포슬"
+    }
+]
+~~~
 
 ### 특정한 데이터를 가져오는 API
-API 요청한 URL과 결과 데이터를 코드로 보여주세요!
+api/post/2 (GET)
+~~~python
+[
+    {
+        "id": 1,
+        "text": "첫 번째글",
+        "like": [
+            1
+        ],
+        "author_nickname": "suy2on"
+    }
+]
+~~~
+
 
 ### 새로운 데이터를 create하도록 요청하는 API
 요청한 URL 및 Body 데이터의 내용과 create된 결과를 보여주세요!

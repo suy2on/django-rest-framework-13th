@@ -6,7 +6,7 @@ from api.serializers import PostSerializer
 
 
 @csrf_exempt
-def post_list(request):
+def postList(request):
     """
     List all code posts, or create a new post.
     """
@@ -22,3 +22,13 @@ def post_list(request):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+
+@csrf_exempt
+def some_post(request, author_id):
+
+    if  request.method == "GET":
+        posts = Post.objects.filter(author_id= author_id)
+        serializer = PostSerializer(posts, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
