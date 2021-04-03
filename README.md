@@ -164,8 +164,14 @@ class Post(models.Model):
 ~~~
 
 ### 모든 list를 가져오는 API
-api/post/ (GET)
+api/posts (GET)
 ~~~python
+GET /api/posts
+HTTP 200 OK
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
 [
     {
         "id": 1,
@@ -173,19 +179,46 @@ api/post/ (GET)
         "like": [
             1
         ],
-        "author_nickname": "suy2on"
+        "author_nickname": "suy2on",
+        "author": 2,
+        "photos": [],
+        "videos": []
     },
     {
         "id": 2,
         "text": "다시글",
         "like": [],
-        "author_nickname": "포슬포슬"
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
     },
     {
         "id": 3,
         "text": "무야호~",
         "like": [],
-        "author_nickname": "포슬포슬"
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 4,
+        "text": "post 이용해서 넣는 문장",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 5,
+        "text": "post 이용해서 넣는 두번째 문장",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
     }
 ]
 ~~~
@@ -222,9 +255,6 @@ api/post (POST)
 ~~~
 
 
-### (선택) 특정 데이터를 삭제 또는 업데이트하는 API
-마감까지 해보려고합니
-
 ### 공부한 내용 정리
 * #### serializer에 field 넣어야하는 것
   - fields = __all__, exclude, 직접 명시 ('id', 'name') 과 같은 방식들로 넣을 수 있음  
@@ -232,8 +262,11 @@ api/post (POST)
   - 기존에 있던 field가 아닌 걸 추가하고 싶다면 : serializer.SerializerMethodField()로 정의해준뒤  
    get_<field_name> 이름의 메소드를 만들어주면 된다  
   - serializers.StringRelatedField() 를 사용해주면 ForgeignKey로 연결된 모델의 __str__ 메소드에서 정의한 string를 리턴  
-  
-* #### REST API 작성요령
+  - 1:n 에서 1쪽의 serializer에서 n을 위한 변수를 만들었다면 (PostSerializer의 photos같이)
+  꼭 field에 넣어줘야한다  
+    (에러: AssertionError: The field 'photos' was declared on serializer PostSerializer, but has not been included in the 'fields' option.
+)
+* ### REST API 작성요령
   - GET 전체조회, POST 같은 경우에는 id값을 붙여주지 않는다  
   - resource부분에 명사는 복수형으로 쓴다 (api/posts)
   - resource와 따라오는 id가 연관되게 쓴다 ( api/posts/2 -> api/users/2/posts )

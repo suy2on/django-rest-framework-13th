@@ -1,34 +1,19 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from api.models import Profile, Post
-from api.serializers import PostSerializer
+from api.models import *
+from api.serializers import *
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-
-@csrf_exempt
-def postList(request):
-    """
-    List all code posts, or create a new post.
-    """
-    if request.method == 'GET':
+class PostList(APIView):
+    def get(self, request, format=None,):
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = PostSerializer(data=data)
+    def post(self, request, format=None):
+        serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-
-@csrf_exempt
-def some_post(request, author_id):
-
-    if  request.method == "GET":
-        posts = Post.objects.filter(author_id= author_id)
-        serializer = PostSerializer(posts, many=True)
-        return JsonResponse(serializer.data, safe=False)
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

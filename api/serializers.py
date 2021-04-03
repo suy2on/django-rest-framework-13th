@@ -28,7 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
     videos = VideoSerializer(many=True, read_only=True)
     class Meta:
         model = Post  # 사용할 모델
-        fields = ['id', 'text', 'like', 'author_nickname', 'author']
+        fields = ['id', 'text', 'like', 'author_nickname', 'author', 'photos', 'videos']
 
     def get_author_nickname(self, obj): # obj는 Post객
         return obj.author.nickname
