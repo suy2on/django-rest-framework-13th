@@ -266,7 +266,7 @@ api/post (POST)
   꼭 field에 넣어줘야한다  
     (에러: AssertionError: The field 'photos' was declared on serializer PostSerializer, but has not been included in the 'fields' option.
 )
-* ### REST API 작성요령
+* #### REST API 작성요령
   - GET 전체조회, POST 같은 경우에는 id값을 붙여주지 않는다  
   - resource부분에 명사는 복수형으로 쓴다 (api/posts)
   - resource와 따라오는 id가 연관되게 쓴다 ( api/posts/2 -> api/users/2/posts )
