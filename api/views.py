@@ -21,7 +21,8 @@ class PostList(APIView):
 
 class PostDetail(APIView):
 		def get(self, request, pk, format=None):
-				...
+
+        def update(sefl, request, pk, format=None):
+
 
 		def delete(self, request, pk, format=None):
-				...
