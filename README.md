@@ -354,18 +354,133 @@ GET api/contents/
 
 
 ### 특정 데이터를 가져오는 API
-API 요청한 URL과 결과 데이터를 코드로 보여주세요!
+GET api/contents/2
+~~~python
+{
+    "id": 2,
+    "text": "다시글",
+    "like": [],
+    "author_nickname": "포슬포슬",
+    "author": 1,
+    "photos": [],
+    "videos": []
+}
+~~~
 
 ### 새로운 데이터를 생성하는 API
-요청 URL 및 body 데이터의 내용과 create된 결과를 보여주세요!
+POST api/contents/ { "text" : "중간고사전 마지막 과제하는 중", "author" : 1 }
+~~~python
+{
+    "id": 7,
+    "text": "중간고사전 마지막 과제하는 중",
+    "like": [],
+    "author_nickname": "포슬포슬",
+    "author": 1,
+    "photos": [],
+    "videos": []
+}
+~~~
 
 ### 특정 데이터를 업데이트하는 API
-요청 URL 및 body 데이터의 내용과 update된 결과를 보여주세요!
+PUT api/contents/2 { "text" : "text 수정합니다" , "author" :  1 }
+~~~python
+{
+    "id": 2,
+    "text": "text 수정합니다",
+    "like": [],
+    "author_nickname": "포슬포슬",
+    "author": 1,
+    "photos": [],
+    "videos": []
+}
+~~~
 
 ### 특정 데이터를 삭제하는 API
-요청 URL 및 delete된 결과를 보여주세요!
+DELETE api/contents/2  
+"DELETE /api/contents/2 HTTP/1.1" 204 0
+~~~python
+[
+    {
+        "id": 1,
+        "text": "첫 번째글",
+        "like": [
+            1
+        ],
+        "author_nickname": "suy2on",
+        "author": 2,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 3,
+        "text": "무야호~",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 4,
+        "text": "post 이용해서 넣는 문장",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 5,
+        "text": "post 이용해서 넣는 두번째 문장",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 6,
+        "text": "또 다른 시도",
+        "like": [],
+        "author_nickname": "suy2on",
+        "author": 2,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 7,
+        "text": "중간고사전 마지막 과제하는 중",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    }
+]
+~~~
 
 ### 공부한 내용 정리
-새로 알게된 점, 정리 하고 싶은 개념, 궁금한점 등을 정리해 주세요
+- ##### List : 전체조회, 새로 생성
+- ##### Detail : 특정 조회, 수정, 삭제
+- ##### get_object : Detail에서 사용하고 특정 데이터들을 처리하기 전에 그 데이터가 존재하는지 검사해주는 기능
+~~~python
+    def get_object(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            raise Http404
+~~~   
+- ##### PUT vs POST
+  POST은 새로 추가 PUT 수정 
+- ##### PUT 부분 필드 수정(partial = True)
+~~~python
+    def put(self, request, pk, format=None):
+        post = self.get_object(pk)
+        serializer = PostSerializer(post, data=request.data, partial= True)
+~~~
+            
+         
+
 
 ### 간단한 회고
+FBV로 구현을 해보고 CBV로 옮기니까 훨씬 이해가 빠르게 되었고 , FBV보다 좀더 잘 정리된 느낌을 받았습니다  
