@@ -17,3 +17,11 @@ class PostList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PostDetail(APIView):
+		def get(self, request, pk, format=None):
+				...
+
+		def delete(self, request, pk, format=None):
+				...
