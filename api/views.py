@@ -22,13 +22,13 @@ class PostList(APIView):
 
 class PostDetail(APIView):
     def get(self, request, pk, format=None):
-        post = self.get_object(pk=pk)
+        post = self.get_object(pk)
         serializer = PostSerializer(post)
         return Response(serializer.data)
 
 
     def put(self, request, pk, format=None):
-        post = self.get_object(pk =pk)
+        post = self.get_object(pk)
         serializer = PostSerializer(post, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -36,3 +36,6 @@ class PostDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
+        post = self.get_object(pk)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
