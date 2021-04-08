@@ -288,23 +288,84 @@ api/posts (POST)
 앞으로 더 rest-api에대해 알아가는 시간들을 가졌으면 좋겠고 많이 배워야겠다는 생각이 듭니다!!
 
 
-4주차 과제 (기한: 4/8 목요일까지)
-모든 list를 가져오는 API
+## 4주차 과제 (기한: 4/8 목요일까지)
+### 모든 list를 가져오는 API
+GET api/contents/
+~~~python
+[
+    {
+        "id": 1,
+        "text": "첫 번째글",
+        "like": [
+            1
+        ],
+        "author_nickname": "suy2on",
+        "author": 2,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 2,
+        "text": "다시글",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 3,
+        "text": "무야호~",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 4,
+        "text": "post 이용해서 넣는 문장",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 5,
+        "text": "post 이용해서 넣는 두번째 문장",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 6,
+        "text": "또 다른 시도",
+        "like": [],
+        "author_nickname": "suy2on",
+        "author": 2,
+        "photos": [],
+        "videos": []
+    }
+]
+~~~
+
+
+### 특정 데이터를 가져오는 API
 API 요청한 URL과 결과 데이터를 코드로 보여주세요!
 
-특정 데이터를 가져오는 API
-API 요청한 URL과 결과 데이터를 코드로 보여주세요!
-
-새로운 데이터를 생성하는 API
+### 새로운 데이터를 생성하는 API
 요청 URL 및 body 데이터의 내용과 create된 결과를 보여주세요!
 
-특정 데이터를 업데이트하는 API
+### 특정 데이터를 업데이트하는 API
 요청 URL 및 body 데이터의 내용과 update된 결과를 보여주세요!
 
-특정 데이터를 삭제하는 API
+### 특정 데이터를 삭제하는 API
 요청 URL 및 delete된 결과를 보여주세요!
 
-공부한 내용 정리
+### 공부한 내용 정리
 새로 알게된 점, 정리 하고 싶은 개념, 궁금한점 등을 정리해 주세요
 
-간단한 회고
+### 간단한 회고

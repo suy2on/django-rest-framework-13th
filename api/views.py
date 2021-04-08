@@ -21,6 +21,12 @@ class PostList(APIView):
 
 
 class PostDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            raise Http404
+
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = PostSerializer(post)
