@@ -4,6 +4,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status , viewsets
+from django_filters import rest_framework as filters
 
 
 class PostViewSet(viewsets.ModelViewSet):
