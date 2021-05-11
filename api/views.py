@@ -4,12 +4,21 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status , viewsets
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import FilterSet, filters
+from django_filters.rest_framework import DjangoFilterBackend
 
+class PostFilter(FilterSet):
+    author = filters.NumberFilter(field_name='author')
+
+    class Meta:
+        model = Post
+        fields = ['author']
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_class = PostFilter
 
 
 
