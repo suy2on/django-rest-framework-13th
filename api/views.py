@@ -8,11 +8,17 @@ from django_filters.rest_framework import FilterSet, filters
 from django_filters.rest_framework import DjangoFilterBackend
 
 class PostFilter(FilterSet):
-    author = filters.NumberFilter(field_name='author')
+    text = filters.CharFilter(field_name="text", lookup_expr="icontains")
+    is_current = filters.BooleanFilter(method='filter_is_current')
 
     class Meta:
         model = Post
-        fields = ['author']
+        fields = ['author', 'text', 'pub_date']
+
+    def filter_is_current(self, queryset):
+        filtered_queryset = queryset.filter(pub_date__month=5)
+
+        return filtered_queryset
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
