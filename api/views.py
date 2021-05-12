@@ -9,17 +9,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 class PostFilter(FilterSet):
     text = filters.CharFilter(field_name="text", lookup_expr="icontains")
-    pub_date= filters.DateTimeFilter(method='filter_is_current')
+    is_current= filters.BooleanFilter(method='filter_is_current')
 
     class Meta:
         model = Post
         fields = ['author', 'text', 'pub_date']
 
-    def filter_is_current(self, queryset):
+    def filter_is_current(self, queryset, pub_date, value):
         set1 = queryset.filter(pub_date__year=2021)
         set2 = queryset.filter(pub_date__month=5)
 
-        return set1.intersection(set2)
+        return set1 & set2
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
@@ -27,7 +27,9 @@ class PostViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_class = PostFilter
 
-
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
 
 # class PostList(APIView):
 #     def get(self, request, format=None):
