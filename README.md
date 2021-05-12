@@ -484,3 +484,132 @@ DELETE api/contents/2
 
 ### 간단한 회고
 FBV로 구현을 해보고 CBV로 옮기니까 훨씬 이해가 빠르게 되었고 , FBV보다 좀더 잘 정리된 느낌을 받았습니다  
+
+## 5주차 과제 (기한: 5/13 목요일까지)
+
+### 1. Viewset으로 리팩토링하기
+
+- 기존에 구현했던 API를 Viewset을 이용하여 리팩토링 해주세요!
+~~~python
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+~~~
+
+GET, POST, PUT, PATCH, DELETE 모두 잘 돌아감 
+
+### 2. filter 기능 구현하기
+
+~~~python
+class PostFilter(FilterSet):
+    text = filters.CharFilter(field_name="text", lookup_expr="icontains") #해당 문자열을 포함하는 queryset
+    is_current= filters.BooleanFilter(method='filter_is_current') # true시에 이번 달 게시물만 출력 
+
+    class Meta:
+        model = Post
+        fields = ['author', 'text', 'pub_date']
+
+    def filter_is_current(self, queryset, name, value):
+        set1 = queryset.filter(pub_date__year=2021)
+        set2 = queryset.filter(pub_date__month=5)
+        
+        return set1 & set2
+    
+    
+    class PostViewSet(viewsets.ModelViewSet):
+        serializer_class = PostSerializer
+        queryset = Post.objects.all()
+        filter_backends = [DjangoFilterBackend]
+        filter_class = PostFilter
+    
+
+
+ ~~~
+
+api/contents/?text=viewset
+
+~~~python
+[
+    {
+        "id": 3,
+        "text": "viewset해봄",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    {
+        "id": 8,
+        "text": "viewset 과제 완료 가즈",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+    
+]
+~~~
+
+api/contents/?text=viewset&is_current=true
+~~~python
+[
+    {
+        "id" 8,
+        "text": "viewset 과제 완료 가즈",
+        "like": [],
+        "author_nickname": "포슬포슬",
+        "author": 1,
+        "photos": [],
+        "videos": []
+    },
+]
+~~~
+
+### 3. (선택) **permission** 기능 구현하기
+
+- view 중 하나 이상을 선택해 permission 기능을 구현해 보세요
+    - 해당 view가 정말로 접근 권한 확인이 필요한 지, 아니면 접근 권한을 없애 보다 쉽게 접근해야 할 대상인지 고민해 본 후에 view를 선택해주세요
+    - DRF에서 제공하는 permission class에 어떤 것들이 있는지 먼저 살펴본다면 좋겠죠?
+
+### 4. (선택) validation 적용하기
+
+- 자유롭게 validation 을 만들어 적용해보세요
+- (권장) validator 만들어서 적용해보기
+
+### 5. 배운점
+
+- #### viewSet  
+  django view -> rest_framework APIView -> Generic Views -> Viewsets
+  
+
+- #### ModelViewSet
+  - Retrieve, Destory, Update -> model_name/\<int:pk>/ -> pk해당 인스턴스관련    
+  
+  - List, Create -> model_name/ -> 전체 get 또는 새로 post  
+  
+- #### method 이용한 필터링  
+  api/contents/?is_current=true
+  - params  
+   name = is_current  
+    value = True  
+    이를 이용하여 method 작성시에 if문을 사용해서 더 다양한 필터링가능
+~~~python
+   def filter_is_current(self, queryset, name, value):
+        set1 = queryset.filter(pub_date__year=2021)
+        set2 = queryset.filter(pub_date__month=5)
+
+        return set1 & set2
+~~~
+### 6. 간단한회고
+초반에 장고튜토리얼에서 제네릭뷰만 접했을 때도 완전 신세계였는데 viewSet이 더 끝판왕이라고 느껴졌습니 하지만 그만큼 내부에서 어떤과정으로 
+이루어지는지 쉽게 보이지 않기 때문에 그 과정을 잘 공부해야 나중에 필요에의해 커스터마이징을 잘 할 수 있고 더 잘 viewSet을 이용
+할 수 있을 것 같습습니다. 이번 장이 조금은 당장의 통신에 많이 중요하지는 않으시다고 하셨지만 서비스를 만들면서 더욱 완성도를 높여주기위해 필요한
+것들이 많이 담겨있던 파트였다고 생각합니다. 그래서 처음접해보는 것이 많아 익혀야 할 내용이 좀 많았지만 시간이 들 더라도 꼼꼼히 보고 잘 숙지하려고 
+합니다.

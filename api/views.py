@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status , viewsets
 from django_filters.rest_framework import FilterSet, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Q
 
 class PostFilter(FilterSet):
     text = filters.CharFilter(field_name="text", lookup_expr="icontains")
@@ -15,7 +16,7 @@ class PostFilter(FilterSet):
         model = Post
         fields = ['author', 'text', 'pub_date']
 
-    def filter_is_current(self, queryset, pub_date, value):
+    def filter_is_current(self, queryset, name, value):
         set1 = queryset.filter(pub_date__year=2021)
         set2 = queryset.filter(pub_date__month=5)
 
