@@ -632,7 +632,7 @@ api/contents/?text=viewset&is_current=true
               return Response(serializer.data)
     ~~~
   
-- Router  
+- #### Router  
 ViewSet은 하나의 view가 아닌 view들의 set이기 때문에 apiView와 다르게 url mapping방식에 router를 사용  
   router가 위의 코드에서 as_view로 method마다 함수로 연결해주던 것을 대신해
   - as_view이용해서 각각 매핑
@@ -683,6 +683,27 @@ ViewSet은 하나의 view가 아닌 view들의 set이기 때문에 apiView와 �
 
         return set1 & set2
 ~~~
+
+- #### filterset의 Meta field
+    - list :  ‘price’와 ‘release_date’필드 모두에 대해 ‘exact’ 조회를 발생시킵니다
+    ~~~python
+    class ProductFilter(FilterSet):
+        class Meta:
+            model = Product
+            fields = ['price', 'release_date']
+    ~~~
+    
+    - dict : 복수 조회 조건설정
+    ~~~python
+      class ProductFilter(FilterSet):
+        class Meta:
+            model = Product
+            fields = {
+                'price': ['lt', 'gt'],
+                'release_date': ['exact', 'year__gt'],
+            }
+    ~~~
+
 ### 6. 간단한회고
 초반에 장고튜토리얼에서 제네릭뷰만 접했을 때도 완전 신세계였는데 viewSet이 더 끝판왕이라고 느껴졌습니다 하지만 그만큼 내부에서 어떤과정으로 
 이루어지는지 쉽게 보이지 않기 때문에 그 과정을 잘 공부해야 나중에 필요에의해 커스터마이징을 잘 할 수 있고 더 잘 viewSet을 이용
