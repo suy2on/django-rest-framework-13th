@@ -521,7 +521,7 @@ class PostFilter(FilterSet):
         return set1 & set2
     
     
-    class PostViewSet(viewsets.ModelViewSet):
+class PostViewSet(viewsets.ModelViewSet):
         serializer_class = PostSerializer
         queryset = Post.objects.all()
         filter_backends = [DjangoFilterBackend]
