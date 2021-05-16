@@ -32,6 +32,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
 
+
+
+
+
 # class PostList(APIView):
 #     def get(self, request, format=None):
 #         posts = Post.objects.all()

@@ -594,6 +594,82 @@ api/contents/?text=viewset&is_current=true
   
   - List, Create -> model_name/ -> 전체 get 또는 새로 post  
   
+  
+- #### decorator action
+  ModelViewSet에서 기본 제공해주는 기능 외에 더 커스터마이징 하고싶은 경우 사용 자
+  - import문 
+    ~~~python
+    from rest_framework.decorators import action
+    ~~~
+  -  action의 인자
+     1. detail :  Boolean 으로서 True 일 경우, pk 값을 지정해줘야하는 경우에 사용하고 False일 경우, 목록 단위로 적용
+     2. method :  request method 를 지정해줄 수 있습니다. 디폴트 값은 get  
+    
+  - detail에 따른 router  
+    (이 때 모든 이름은 소문자이며, function name의 언더바(_)는 하이픈(-) 으로 교체)
+    1. detail=True
+
+        url : /prefix/{pk}/{function name}/  
+        name : {model name}-{function name}  
+       
+    2. detail=False  
+
+        url : /prefix/{function name}/  
+        name : {model name}-{function name}  
+   - 예
+    ~~~python
+      class PostViewSet(ModelViewSet):
+          queryset = Post.objects.all()
+          serializer_class = PostSerializer 
+          
+           # url : post/{pk}/set_public/
+          @action(detail=True, methods=['patch'])
+          def set_public(self, request, pk):
+              instance = self.get_object()
+              instance.is_public = True
+              instance.save()
+              serializer = self.get_serializer(instance)
+              return Response(serializer.data)
+    ~~~
+  
+- Router  
+ViewSet은 하나의 view가 아닌 view들의 set이기 때문에 apiView와 다르게 url mapping방식에 router를 사용  
+  router가 위의 코드에서 as_view로 method마다 함수로 연결해주던 것을 대신해
+  - as_view이용해서 각각 매핑
+    ~~~python
+    class PostViewSet(ModelViewSet):
+        queryset = Post.objects.all()
+        serializer_class = PostSerializer   
+    
+    post_list = PostViewSet.as_view({
+        'get': 'list',
+        'post': 'create',
+    })
+    
+    post_detail = PostViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy',
+    })
+    ~~~
+    ~~~python
+    
+        urlpatterns = [
+            path('post/', views.post_list),
+            path('post/<int:pk>/', views.post_detail),
+        ]
+    ~~~
+  - router를 이용하여 한번에 매핑
+    ~~~python
+        router = DefaultRouter()
+        router.register(r'post',views.PostViewSet)
+        
+        urlpatterns = [
+            path('',include(router.urls)),
+        ]
+    ~~~
+  
 - #### method 이용한 필터링  
   api/contents/?is_current=true
   - params  
@@ -610,6 +686,10 @@ api/contents/?text=viewset&is_current=true
 ### 6. 간단한회고
 초반에 장고튜토리얼에서 제네릭뷰만 접했을 때도 완전 신세계였는데 viewSet이 더 끝판왕이라고 느껴졌습니다 하지만 그만큼 내부에서 어떤과정으로 
 이루어지는지 쉽게 보이지 않기 때문에 그 과정을 잘 공부해야 나중에 필요에의해 커스터마이징을 잘 할 수 있고 더 잘 viewSet을 이용
-할 수 있을 것 같습습니다. 이번 장이 조금은 당장의 통신에 많이 중요하지는 않으시다고 하셨지만 서비스를 만들면서 더욱 완성도를 높여주기위해 필요한
-것들이 많이 담겨있던 파트였다고 생각합니다. 그래서 처음접해보는 것이 많아 익혀야 할 내용이 좀 많았지만 시간이 들 더라도 꼼꼼히 보고 잘 숙지하려고 
+할 수 있을 것 같습습니다. 이번 장이 서비스를 만들면서 더욱 완성도를 높여주기위해 필요한 것들이 많이 담겨있던 파트였다고 생각합니다. 그래서 처음접해보는 것이 많아 익혀야 할 내용이 좀 많았지만 시간이 들 더라도 꼼꼼히 보고 잘 숙지하려고 
 합니다.
+
+### 7. 참고한 곳
+1. https://ssungkang.tistory.com/entry/Django-APIView-Mixins-generics-APIView-ViewSet%EC%9D%84-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90?category=366160
+2. https://www.django-rest-framework.org/api-guide/viewsets/
+
