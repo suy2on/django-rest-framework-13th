@@ -37,9 +37,16 @@ class PostSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     posts = PostSerializer(many=True, read_only=True)
+    user_password = serializers.SerializerMethodField()
+    user_username = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile  # 사용할 모델
-        fields = ['id', 'nickname', 'web_site', 'phone_num', 'posts', 'comment', 'img']
+        fields = ['id', 'nickname', 'user_username', 'usccpassword', 'web_site', 'phone_num', 'posts', 'comment', 'img']
 
 
+    def get_user_password(self, obj):
+            return obj.user.password
+
+    def get_user_username(self, obj):
+        return obj.user.username

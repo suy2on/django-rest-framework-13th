@@ -12,7 +12,7 @@ from django.db.models import Q
 
 class PostFilter(FilterSet):
     text = filters.CharFilter(field_name="text", lookup_expr="icontains")
-    is_current= filters.BooleanFilter(method='filter_is_current')
+    is_current = filters.BooleanFilter(method='filter_is_current')
 
     class Meta:
         model = Post
