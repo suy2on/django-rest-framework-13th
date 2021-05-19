@@ -3,10 +3,12 @@ from api.serializers import *
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status , viewsets
+from rest_framework import status , viewsets, permissions
 from django_filters.rest_framework import FilterSet, filters
 from django_filters.rest_framework import DjangoFilterBackend
+from api.permissions import IsOwnerOrReadOnly
 from django.db.models import Q
+
 
 class PostFilter(FilterSet):
     text = filters.CharFilter(field_name="text", lookup_expr="icontains")
@@ -27,6 +29,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     filter_backends = [DjangoFilterBackend]
     filter_class = PostFilter
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
 class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
