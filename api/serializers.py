@@ -1,5 +1,7 @@
 from rest_framework import serializers
+import re   # 정규식 쓰기위한 모듈
 from api.models import *
+
 
 
 class VideoSerializer(serializers.ModelSerializer):
@@ -42,7 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile  # 사용할 모델
-        fields = ['id', 'nickname', 'user_username', 'usccpassword', 'web_site', 'phone_num', 'posts', 'comment', 'img']
+        fields = ['id', 'nickname', 'user_username', 'user_password', 'web_site', 'phone_num', 'posts', 'comment', 'img']
 
 
     def get_user_password(self, obj):
@@ -50,3 +52,15 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_user_username(self, obj):
         return obj.user.username
+
+    def validate_phone_num(self, value):
+        pattern = '\d{3}-\d{4}-\d{4}'
+        phoneReg = re.compile(pattern)
+        print(value)
+        if(phoneReg.match(value) == None):
+            raise serializers.ValidationError("핸드폰번호는 xxx-xxxx-xxxx 형식이어야합니다.")
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
