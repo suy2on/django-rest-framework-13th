@@ -44,7 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile  # 사용할 모델
-        fields = ['id', 'nickname', 'user_username', 'user_password', 'web_site', 'phone_num', 'posts', 'comment', 'img']
+        fields = '__all__'
 
 
     def get_user_password(self, obj):
@@ -59,6 +59,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         print(value)
         if(phoneReg.match(value) == None):
             raise serializers.ValidationError("핸드폰번호는 xxx-xxxx-xxxx 형식이어야합니다.")
+        return value
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

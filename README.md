@@ -572,16 +572,89 @@ api/contents/?text=viewset&is_current=true
 ]
 ~~~
 
-### 3. (선택) **permission** 기능 구현하기
+### 3. **permission** 기능 구현하기
 
-- view 중 하나 이상을 선택해 permission 기능을 구현해 보세요
-    - 해당 view가 정말로 접근 권한 확인이 필요한 지, 아니면 접근 권한을 없애 보다 쉽게 접근해야 할 대상인지 고민해 본 후에 view를 선택해주세요
-    - DRF에서 제공하는 permission class에 어떤 것들이 있는지 먼저 살펴본다면 좋겠죠?
+~~~python
+    class PostViewSet(viewsets.ModelViewSet):
+        serializer_class = PostSerializer
+        queryset = Post.objects.all()
+        filter_backends = [DjangoFilterBackend]
+        filter_class = PostFilter
+        permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+~~~
+- #### IsOwnerOrReadOnly   
+  본인 것만 수정 및 삭제 가능 / 아니라면 읽기전 (글쓴이인지 아닌)
+~~~python
+from rest_framework import permissions
 
-### 4. (선택) validation 적용하기
 
-- 자유롭게 validation 을 만들어 적용해보세요
-- (권장) validator 만들어서 적용해보기
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object to edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            print(obj)
+            print(request.user)
+            return True
+
+        # Write permissions are only allowed to the owner of the snippet.
+        return obj.author.user.id == request.user.id    # obj.author -> Profile / profile.user -> User
+~~~
+- #### IsAuthenticatedOrReadOnly   
+  로그인한 사용자만 생성/ 수정/ 삭제 가능 / 나머지는 읽기전용지 (회원인지 아닌)지
+
+- #### 실습
+  http://127.0.0.1:8000/api/contents/ POST  -> 로그인안한상태
+  ~~~python
+    {
+    "detail": "자격 인증데이터(authentication credentials)가 제공되지 않았습니다."
+    }
+  ~~~
+
+### 4. validation 적용하기
+~~~python
+import re   # 정규식 쓰기위한 모듈
+~~~
+
+~~~python
+class ProfileSerializer(serializers.ModelSerializer):
+    posts = PostSerializer(many=True, read_only=True)
+    user_password = serializers.SerializerMethodField()
+    user_username = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile  # 사용할 모델
+        fields = ['id', 'nickname', 'user_username', 'user_password', 'web_site', 'phone_num', 'posts', 'comment', 'img']
+
+
+    def get_user_password(self, obj):
+            return obj.user.password
+
+    def get_user_username(self, obj):
+        return obj.user.username
+
+    def validate_phone_num(self, value):
+        pattern = '\d{3}-\d{4}-\d{4}'
+        phoneReg = re.compile(pattern)
+        print(value)
+        if(phoneReg.match(value) == None):
+            raise serializers.ValidationError("핸드폰번호는 xxx-xxxx-xxxx 형식이어야합니다.")
+        return value # 유효성 검사후 다시 돌려줌 
+        
+~~~
+http://127.0.0.1:8000/api/profiles/  
+phone_num = 01012345678
+~~~python
+{
+    "phone_num": [
+        "핸드폰번호는 xxx-xxxx-xxxx 형식이어야합니다."
+    ]
+}
+~~~
 
 ### 5. 배운점
 

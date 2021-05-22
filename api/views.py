@@ -1,13 +1,25 @@
 from api.models import *
 from api.serializers import *
 from django.http import Http404
+
+# apiview
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+# viewset
 from rest_framework import status , viewsets, permissions
+
+# fileter
 from django_filters.rest_framework import FilterSet, filters
 from django_filters.rest_framework import DjangoFilterBackend
+
+# permission
 from api.permissions import IsOwnerOrReadOnly
 from django.db.models import Q
+
+
+
+
 
 
 class PostFilter(FilterSet):
@@ -35,6 +47,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
 
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
 
 
