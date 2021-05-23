@@ -17,6 +17,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from api.permissions import IsOwnerOrReadOnly
 from django.db.models import Q
 
+# auth
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 
 
 
@@ -42,6 +45,7 @@ class PostViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filter_class = PostFilter
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [JSONWebTokenAuthentication]
 
 class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer

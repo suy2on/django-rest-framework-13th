@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import json
 from django.conf import settings
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -47,10 +48,28 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS' : (
+    'DEFAULT_FILTER_BACKENDS' : (   # query로 필터링할 때
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (    # 로그인 했는지
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (   # 로그인 관련 인증
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 }
+
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',   # jwt algo
+    'JWT_ALLOW_REFRESH': True,  # JWT 토큰을 갱신할 수 있게 할지 여부
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),   # JWT 토큰의 유효 기간을 설정
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),   #JWT 토큰 갱신의 유효기간
+}
+# 7일마다 갱신하지 않으면 로그아웃 , 하지만 계속 갱신해도 28일 후에는 자동로그아웃
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -615,6 +615,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     }
   ~~~
 
+-> IsOwnerOrReadOnly는 아직 구현 못해봄.. (인증하는과정에서 계속 시도중입니다.)
 ### 4. validation 적용하기
 ~~~python
 import re   # 정규식 쓰기위한 모듈
@@ -787,3 +788,85 @@ ViewSet은 하나의 view가 아닌 view들의 set이기 때문에 apiView와 �
 1. https://ssungkang.tistory.com/entry/Django-APIView-Mixins-generics-APIView-ViewSet%EC%9D%84-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90?category=366160
 2. https://www.django-rest-framework.org/api-guide/viewsets/
 
+
+
+## 6주차 최종코드
+### 1. DRF-JWT (auth)
+- #### 설치 
+~~~python
+pip install djangorestframework djangorestframework-jwt
+~~~
+- #### settings.py 
+~~~python
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS' : (   # query로 필터링할 때
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (    # 로그인 했는지
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (   # 로그인 관련 인증
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+~~~
+~~~python
+JWT_AUTH = {
+    'JWT_SECRET_KEY': SECRET_KEY,
+    'JWT_ALGORITHM': 'HS256',   # jwt algo
+    'JWT_ALLOW_REFRESH': True,  # JWT 토큰을 갱신할 수 있게 할지 여부
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),   # JWT 토큰의 유효 기간을 설정
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),   #JWT 토큰 갱신의 유효기간
+}
+# 7일마다 갱신하지 않으면 로그아웃 , 하지만 계속 갱신해도 28일 후에는 자동로그아웃
+~~~
+- #### urls.py 
+~~~python
+# jwt token
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('auth/token/', obtain_jwt_token),  # JWT 토큰을 발행
+    path('auth/token/verify/', verify_jwt_token), # JWT 토큰이 유효한지 검증
+    path('au/token/refresh/', refresh_jwt_token), # JWT 토큰을 갱신할 때 사용
+    path('api/', include('api.urls'))
+]
+~~~
+- #### views.py
+~~~python
+# auth
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filter_class = PostFilter
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    authentication_classes = [JSONWebTokenAuthentication]
+
+~~~
+- #### 실습
+    - 토큰발급  
+    http://localhost:8000/auth/token/에 POST로 username과 password를 설정하여 요청 (superuser)로
+    ~~~python
+        {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5LCJ1c2VybmFtZSI6ImRvcm8iLCJleHAiOjE2MjIzNTMwMDAsImVtYWlsIjoidG53amRybXNAbmF2ZXZyLmNvbSIsIm9yaWdfaWF0IjoxNjIxNzQ4MjAwfQ.64jwlN0J2smLAcaRQiVNjwbVJnqFQEbESRYyGYf7Nwk"
+        }  
+    ~~~
+    - 인증받기  
+    header에   
+    key : Authorization  
+    value : jwt 발급받은 token  
+      http://127.0.0.1:8000/api/contents/ POST 가능
+      
+  참고: https://dev-yakuza.posstree.com/ko/django/jwt/  
+  Q. superuser말고 그냥 내가 생성한 다른 user로는 jwt토큰 발급을 어떻게 받을 수 있을까??? (여기선 bad request라고 뜸)
+
+  
